@@ -35,7 +35,7 @@ void sum_code_line(){
 
 int main() {
     using namespace std::chrono;
-    time_point start_time {system_clock::now()};
+    const time_point start_time {system_clock::now()};
     try
     {
         sum_code_line();
@@ -44,7 +44,7 @@ int main() {
     {
         spdlog::error("what: {}", e.what());
     }
-    time_point end_time = std::chrono::system_clock::now();
+    const time_point end_time = std::chrono::system_clock::now();
     fmt::print("Run time: {}us\n", duration_cast<std::chrono::microseconds>(end_time - start_time).count());
     return 0;
 }
