@@ -74,7 +74,7 @@ macro(advent2023_enable_clang_tidy target WARNINGS_AS_ERRORS)
         -extra-arg=-Wno-unknown-warning-option
         -extra-arg=-Wno-ignored-optimization-argument
         -extra-arg=-Wno-unused-command-line-argument)
-    if(WIN32)
+    if(WIN32 AND NOT advent2023_ENABLE_COVERAGE)
         list(APPEND CLANG_TIDY_OPTIONS -extra-arg=/EHsc)
     endif()
     list(APPEND CLANG_TIDY_OPTIONS -p)
