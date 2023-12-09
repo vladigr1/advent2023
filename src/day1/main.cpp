@@ -19,12 +19,12 @@ int main() {
         return -1;
     }
 
-    unsigned sum = 0;
+    int sum = 0;
     while (std::getline(input_file, myline)) {
         // TODO: check performance with deferent solution
         // size_t last_index = str.find_last_not_of("0123456789");
 
-        auto is_digit = [](char c) -> bool { return static_cast<bool>(std::isdigit(c)); };
+        auto is_digit = [](char charcter) -> bool { return static_cast<bool>(std::isdigit(charcter)); };
         auto first = std::find_if(myline.cbegin(), myline.cend(), is_digit);
         auto last = std::find_if(myline.rbegin(), myline.rend(), is_digit);
         sum += std::stoi(fmt::format("{}{}\n", *first, *last));

@@ -14,8 +14,8 @@ int main() {
 
         std::cout << fmt::format(fg(fmt::color::steel_blue) | fmt::emphasis::italic, "Hello, {}!\n", "??") << std::endl;
         fmt::printf("hello world");
-        std::string a;
-        std::cin >> a;
+        std::string input_str;
+        std::cin >> input_str;
     } catch (const std::exception &e) { spdlog::error("Unhandled exception in main: {}", e.what()); }
     return 0;
 }
