@@ -73,8 +73,11 @@ macro(advent2023_enable_clang_tidy target WARNINGS_AS_ERRORS)
         ${CLANGTIDY}
         -extra-arg=-Wno-unknown-warning-option
         -extra-arg=-Wno-ignored-optimization-argument
-        -extra-arg=-Wno-unused-command-line-argument
-        -p)
+        -extra-arg=-Wno-unused-command-line-argument)
+    if(WIN32 AND advent2023_ENABLE_IPO)
+        list(APPEND CLANG_TIDY_OPTIONS -extra-arg=/EHsc)
+    endif()
+    list(APPEND CLANG_TIDY_OPTIONS -p)
     # set standard
     if(NOT
        "${CMAKE_CXX_STANDARD}"
