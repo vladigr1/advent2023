@@ -32,7 +32,7 @@ std::tuple<int, std::string_view> get_number(std::string_view line) {
     auto is_not_digit = [](char charcter) -> bool { return !static_cast<bool>(std::isdigit(charcter)); };
     const std::string_view::const_iterator first = std::find_if(line.cbegin(), line.cend(), is_digit);
     const std::string_view::const_iterator last = std::find_if(first, line.cend(), is_not_digit);
-    line.remove_prefix(static_cast<const std::string_view::size_type>(last - line.cbegin()));
+    line.remove_prefix(static_cast<std::string_view::size_type>(last - line.cbegin()));
     return { std::stoi(std::string_view{ first, last }.data()), line };
 }
 
@@ -49,7 +49,7 @@ std::string_view update_color(Game &game, int num, std::string_view line) {
     } else if (type == "blue") {
         game.blue = num;
     }
-    line.remove_prefix(static_cast<const std::string_view::size_type>(last - line.cbegin()));
+    line.remove_prefix(static_cast<std::string_view::size_type>(last - line.cbegin()));
     return line;
 }
 
