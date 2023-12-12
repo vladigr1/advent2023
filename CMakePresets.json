@@ -128,7 +128,9 @@
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "clang-cl",
                 "CMAKE_CXX_COMPILER": "clang-cl",
-                "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+                "ENABLE_CPPCHECK_DEFAULT": "TRUE",
+                "ENABLE_CLANG_TIDY_DEFAULT": "TRUE"
             },
             "vendor": {
                 "microsoft.com/VisualStudioSettings/CMake/1.0": {
