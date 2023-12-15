@@ -17,7 +17,10 @@
 
 struct Node
 {
-    static int sum;
+    static int &sum(){
+        static int sum = 0;
+        return sum;
+    }   
 
     int digit;// const int i{std::atoi(s)};
     std::string_view::difference_type begin;
@@ -27,7 +30,7 @@ struct Node
     void count() {
         if (!counted) {
             counted = true;
-            sum += digit;
+            sum() += digit;
         }
     }
 
@@ -62,7 +65,7 @@ struct Node
         }
     }
 };
-int Node::sum = 0;
+// int Node::sum = 0;
 using List = std::list<Node>;
 
 // TODO: is ugly lose ownership advantage
@@ -154,7 +157,7 @@ void solver() {
         prev = std::move(current);
     }
 
-    fmt::print("sum: {}\n", Node::sum);
+    // fmt::print("sum: {}\n", Node::sum);
 }
 
 
