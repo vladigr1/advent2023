@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 
+#include <advent2023/sample_library.hpp>
 #include <algorithm>
 #include <chrono>
 #include <fmt/format.h>
@@ -9,11 +10,11 @@
 #include <functional>
 #include <memory>
 #include <spdlog/spdlog.h>
-#include <advent2023/sample_library.hpp>
 
+#include <list>
 #include <unordered_set>
 
-unsigned get_card_score(std::string_view myline) {
+unsigned get_match(std::string_view myline) {
     std::string_view::const_iterator end_winning_num = std::find(myline.cbegin(), myline.cend(), '|');
     std::string_view::const_iterator start_winning_num = std::find(myline.cbegin(), myline.cend(), ':');
     std::string_view winning_number{ ++start_winning_num, end_winning_num };
@@ -37,10 +38,33 @@ unsigned get_card_score(std::string_view myline) {
     };
 
     apply_str_num(card_number, update_match);
+    return match;
+}
 
-    spdlog::debug("num matches: {}", match);
+unsigned get_num_copy(std::list<unsigned> &num_copy) {
+    unsigned copy;
+    if (!num_copy.empty()) {
+        copy = num_copy.front();
+        num_copy.pop_front();
+    } else {
+        copy = 0;
+    }
+    return copy;
+}
 
-    return static_cast<unsigned>(std::exp2(static_cast<double>(match - 1)));
+void update_num_copy(std::list<unsigned> &num_copy, unsigned num_match, unsigned num_instance) {
+    std::list<unsigned>::iterator begin = num_copy.begin();
+    for (unsigned i = 0; i < num_match; ++i) {
+        if (begin != num_copy.end()) {
+            // in list
+            spdlog::debug("iter: {} num_copy: {}", i, *begin);
+            *begin += num_instance;
+            ++begin;
+        } else {
+            spdlog::debug("iter: {}", i);
+            num_copy.push_back(num_instance);
+        }
+    }
 }
 
 void solver() {
@@ -52,9 +76,15 @@ void solver() {
     int num_line = 0;
 
     unsigned score = 0;
+    std::list<unsigned> num_copy;
     while (std::getline(input_file, myline)) {
         spdlog::debug("line {}:\t{}", ++num_line, myline);
-        score += get_card_score(myline);
+        const unsigned cur_num_copy = get_num_copy(num_copy);
+        const unsigned num_instance = cur_num_copy + 1;
+        score += num_instance;
+        const unsigned num_match = get_match(myline);
+        spdlog::info("line: {} num_instance: {} num matches: {}", num_line, num_instance, num_match);
+        update_num_copy(num_copy, num_match, num_instance);
     }
 
     fmt::print("Score: {}\n", score);
