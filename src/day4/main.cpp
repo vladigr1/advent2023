@@ -9,23 +9,9 @@
 #include <functional>
 #include <memory>
 #include <spdlog/spdlog.h>
+#include <advent2023/sample_library.hpp>
 
 #include <unordered_set>
-
-// unsigned get_num_match(std::unordered_set<unsigned> winning_set, std::string_view card_number){
-
-// }
-
-template<typename Func> void apply_str_num(std::string_view str_num, Func func) {
-    auto is_digit = [](char cha) { return static_cast<bool>(std::isdigit(cha)); };
-    auto is_not_digit = [](char charcter) -> bool { return !static_cast<bool>(std::isdigit(charcter)); };
-    std::string_view::const_iterator first;
-    std::string_view::const_iterator last = str_num.cbegin();// first step
-    while ((first = std::find_if(last, str_num.cend(), is_digit)) != str_num.cend()) {
-        last = std::find_if(first, str_num.cend(), is_not_digit);
-        func(std::stoi(std::string_view{ first, last }.data()));
-    }
-}
 
 unsigned get_card_score(std::string_view myline) {
     std::string_view::const_iterator end_winning_num = std::find(myline.cbegin(), myline.cend(), '|');
