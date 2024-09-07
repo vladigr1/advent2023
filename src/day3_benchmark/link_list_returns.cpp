@@ -138,7 +138,7 @@ void count_word(List &current, List &prev) {
 }
 
 
-void solver(int max_line) {
+void solver(int64_t max_line) {
     const std::string file_path = __FILE__;
     const std::string dir_path = file_path.substr(0, file_path.rfind('\\'));
     std::ifstream input_file{ dir_path + "\\input.txt" };
