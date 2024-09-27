@@ -7,6 +7,8 @@
 #include <advent2023/sample_library.hpp>
 #include <advent2023/day5_lib.hpp>
 
+#include <limits>
+
 void solver() {
     const std::string file_path = __FILE__;
     const std::string dir_path = file_path.substr(0, file_path.rfind('\\'));
@@ -15,7 +17,7 @@ void solver() {
 
     auto [mcategory, mdestination] = readFile(map_file);
     // you can earase the the string each read
-    unsigned min_location = -1;
+    unsigned min_location = std::numeric_limits<unsigned>::max();
     while (! seed_file.eof()) {
         
         std::string destination_category {"seed"};

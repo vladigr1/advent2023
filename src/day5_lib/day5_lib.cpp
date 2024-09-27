@@ -2,6 +2,7 @@
 #include <spdlog/spdlog.h>
 #include <sstream>
 #include <string>
+#include <limits>
 
 
 Header getHeader(std::string_view myline){
@@ -69,7 +70,6 @@ std::tuple<MapCategory, MapDestination> readFile(std::ifstream &input_file){
 }
 
 MapFirstRange mapLocationStartToRangeSeed(const MapCategory& mCategory, const MapDestination& mDestination){
-    spdlog::set_level(spdlog::level::debug);
     std::string destination_category = mCategory.at("seed");
     MapFirstRange mSeedToLocation = mDestination.at(destination_category);
     mSeedToLocation[0] = getDestintionAndLenghExtra(mSeedToLocation, 0);
