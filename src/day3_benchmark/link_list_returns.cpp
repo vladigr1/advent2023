@@ -153,7 +153,7 @@ void solver(int64_t max_line) {
 
         List current = generate_list(myline);
         count_word(current, prev);
-        prev = current;
+        prev.swap(current);
     }
 
     // fmt::print("sum: {}\n", Node::sum);

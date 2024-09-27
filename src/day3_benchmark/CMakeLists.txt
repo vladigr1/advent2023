@@ -1,4 +1,4 @@
-if (CMAKE_BUILD_TYPE STREQUAL "Debug" AND WIN32)
+if (WIN32)
     add_executable(day3_benchamrk benchmark.cpp original.cpp)
 
     target_link_libraries(
