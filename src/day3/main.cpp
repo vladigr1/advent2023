@@ -162,15 +162,15 @@ void solver() {
 
 
 int main() {
-    using namespace std::chrono;
+    // using namespace std::chrono;
     // spdlog::set_level(spdlog::level::debug);// Set global log level to debug
     // spdlog::set_pattern("[%H:%M:%S %z] [%n] [%^---%L---%$] [thread %t] %v");
 
-    const time_point<steady_clock> start_time = steady_clock::now();
+    // const time_point<steady_clock> start_time = steady_clock::now();
     try {
         solver();
     } catch (const std::exception &e) { spdlog::error("what: {}", e.what()); }
-    const time_point<steady_clock> end_time = std::chrono::steady_clock::now();
-    fmt::print("Run time: {}us\n", duration_cast<std::chrono::microseconds>(end_time - start_time).count());
+    // const time_point<steady_clock> end_time = std::chrono::steady_clock::now();
+    // fmt::print("Run time: {}us\n", duration_cast<std::chrono::microseconds>(end_time - start_time).count());
     return 0;
 }

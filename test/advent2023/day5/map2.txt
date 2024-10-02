@@ -1,0 +1,7 @@
+seed-to-soil map:
+50 98 2
+52 50 48
+
+temperature-to-humidity map:
+0 69 1
+1 0 69

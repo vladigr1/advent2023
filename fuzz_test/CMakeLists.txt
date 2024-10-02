@@ -8,7 +8,6 @@ target_link_libraries(
   fuzz_tester
   PRIVATE advent2023_options
           advent2023_warnings
-          fmt::fmt
           -coverage
           -fsanitize=fuzzer)
 target_compile_options(fuzz_tester PRIVATE -fsanitize=fuzzer)
