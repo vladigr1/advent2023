@@ -3,15 +3,15 @@ target_link_libraries(
   tests5
   PRIVATE advent2023::advent2023_warnings
           advent2023::advent2023_options
-          advent2023::sample_library
           advent2023::day5_lib
           Catch2::Catch2WithMain)
+target_compile_features(tests5 PUBLIC cxx_std_20)
 
 if(WIN32 AND BUILD_SHARED_LIBS)
   add_custom_command(
     TARGET tests5
     PRE_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:tests> $<TARGET_FILE_DIR:tests>
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:tests5> $<TARGET_FILE_DIR:tests5>
     COMMAND_EXPAND_LISTS)
 endif()
 

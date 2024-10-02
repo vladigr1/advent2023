@@ -7,7 +7,7 @@ add_library(day5_lib day5_lib.cpp)
 
 add_library(advent2023::day5_lib ALIAS day5_lib)
 
-target_link_libraries(day5_lib PRIVATE advent2023_options advent2023_warnings 
+target_link_libraries(day5_lib PUBLIC advent2023_options advent2023_warnings 
     fmt::fmt
     spdlog::spdlog)
 

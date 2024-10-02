@@ -1,5 +1,5 @@
 #include <advent2023/day5_lib.hpp>
-#include <spdlog/spdlog.h>
+// #include <spdlog/spdlog.h>
 #include <sstream>
 #include <string>
 #include <limits>
@@ -24,7 +24,7 @@ MapFirstRange getMapFirstRange(std::ifstream &input_file){
         if (extract.str().empty()) break;
         unsigned start_source, start_destination, length;
         extract >> start_destination >> start_source >> length;
-        spdlog::debug("getMapFirstRange: myline: {}", myline);
+// spdlog::debug::debug("getMapFirstRange: myline: {}", myline);
         res[start_source] = {start_destination, length};
 
     }
@@ -36,7 +36,7 @@ unsigned getDestintion(MapFirstRange &mapFirstRange, unsigned source){
     if (res == mapFirstRange.end()) return source;
     unsigned delta = source - res->first;
     if(delta >= res->second.length){
-        spdlog::debug("getDestintion: not in range - {}", source);
+// spdlog::debug::debug("getDestintion: not in range - {}", source);
         return source;
     }
     return res->second.start_destination + delta;
@@ -48,7 +48,7 @@ FirstRange getDestintionAndLenghExtra(const MapFirstRange &mapFirstRange, unsign
     if (res == mapFirstRange.cend()) return {source, mapFirstRange.begin()->first - source};
     unsigned delta = source - res->first;
     if(delta >= res->second.length){
-        spdlog::debug("getDestintion: not in range - {}", source);
+// spdlog::debug::debug("getDestintion: not in range - {}", source);
         return {source , std::numeric_limits<unsigned>::max()};
     }
     unsigned desitination = res->second.start_destination + delta;
@@ -84,12 +84,12 @@ MapFirstRange mapLocationStartToRangeSeed(const MapCategory& mCategory, const Ma
                 auto [destinationCur, lengthExtra] = getDestintionAndLenghExtra(mDestination.at(destination_category), seedDestinationFirstRange.start_destination);
                 lengthExtra = std::min(lengthExtra, seedDestinationFirstRange.length);
                 localMSeedToLocation[seedFirst] = {destinationCur, lengthExtra};
-                spdlog::debug("mapLocationStartToRangeSeed: seedFirst={} lengthExtra={} start_destination={} length={}", seedFirst, lengthExtra, seedDestinationFirstRange.start_destination, seedDestinationFirstRange.length);
+// spdlog::debug::debug("mapLocationStartToRangeSeed: seedFirst={} lengthExtra={} start_destination={} length={}", seedFirst, lengthExtra, seedDestinationFirstRange.start_destination, seedDestinationFirstRange.length);
 
                 seedDestinationFirstRange.length -= lengthExtra;
                 seedFirst += lengthExtra;
                 seedDestinationFirstRange.start_destination += lengthExtra;
-                spdlog::debug("mapLocationStartToRangeSeed: seedDestinationFirstRange.length={}", seedDestinationFirstRange.length);
+// spdlog::debug::debug("mapLocationStartToRangeSeed: seedDestinationFirstRange.length={}", seedDestinationFirstRange.length);
             } 
         }
         mSeedToLocation = localMSeedToLocation;
@@ -103,7 +103,7 @@ MapFirstRange vectorSeed(std::ifstream &input_file){
     while (! input_file.eof()) {
         unsigned seed_start, range;
         input_file >> seed_start >> range;
-        spdlog::debug("solver: seed_start={} range={}", seed_start, range);
+// spdlog::debug::debug("solver: seed_start={} range={}", seed_start, range);
         res[seed_start] = {seed_start, range};
     }
     return res;
@@ -130,13 +130,13 @@ MapFirstRange genVectorSeedFromMapDestination(MapFirstRange &vseed, MapFirstRang
     MapFirstRange vdestination; 
     for (auto value : vseed){
         FirstRange curSeedRange = value.second;
-        spdlog::debug("new curSeedRange.start_destination={} curSeedRange.length={}\n", curSeedRange.start_destination, curSeedRange.length);
+// spdlog::debug::debug("new curSeedRange.start_destination={} curSeedRange.length={}\n", curSeedRange.start_destination, curSeedRange.length);
         while(curSeedRange.length){
-            spdlog::debug("curSeedRange.start_destination={} curSeedRange.length={}\n", curSeedRange.start_destination, curSeedRange.length);
+// spdlog::debug::debug("curSeedRange.start_destination={} curSeedRange.length={}\n", curSeedRange.start_destination, curSeedRange.length);
             FirstRange entry = getDestintionAndLenghExtra(curMapdist, curSeedRange.start_destination);
-            spdlog::debug("entry.start_destination={} entry.length={}\n", entry.start_destination, entry.length);
+// spdlog::debug::debug("entry.start_destination={} entry.length={}\n", entry.start_destination, entry.length);
             unsigned minLengthExtra = std::min(curSeedRange.length, entry.length);
-            spdlog::debug("minLengthExtra={}\n", minLengthExtra);
+// spdlog::debug::debug("minLengthExtra={}\n", minLengthExtra);
             entry.length = minLengthExtra;
 
             vdestination[entry.start_destination] = entry;
