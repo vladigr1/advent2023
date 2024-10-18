@@ -54,4 +54,12 @@ function(advent2023_setup_dependencies)
     endif()
   endif()
 
+  if(NOT TARGET magic_enum::magic_enum)
+    CPMAddPackage(
+        NAME magic_enum
+        GITHUB_REPOSITORY Neargye/magic_enum
+        GIT_TAG v0.9.6 # Where `x.y.z` is the release version you want to use.
+    )
+  endif()
+
 endfunction()
