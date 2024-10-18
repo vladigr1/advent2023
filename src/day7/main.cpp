@@ -109,7 +109,7 @@ class Player
         case 'A':
             return 14;
         default:
-            return card - '0';
+            return static_cast<unsigned>(card - '0');
         }
     }
 };

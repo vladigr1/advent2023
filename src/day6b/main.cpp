@@ -23,7 +23,7 @@ void solver() {
     std::ifstream time_file{ dir_path + "\\time.txt" };
     std::ifstream distnace_file{ dir_path + "\\distance.txt" };
 
-    unsigned total = 1;
+    uint64_t total = 1;
     while ( !time_file.eof()) {
         uint64_t time, distance, sol;
         time_file >> time;
