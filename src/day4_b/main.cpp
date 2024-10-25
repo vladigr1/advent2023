@@ -42,7 +42,7 @@ unsigned get_match(std::string_view myline) {
 }
 
 unsigned get_num_copy(std::list<unsigned> &num_copy) {
-    unsigned copy;
+    unsigned copy {0};
     if (!num_copy.empty()) {
         copy = num_copy.front();
         num_copy.pop_front();
@@ -53,7 +53,7 @@ unsigned get_num_copy(std::list<unsigned> &num_copy) {
 }
 
 void update_num_copy(std::list<unsigned> &num_copy, unsigned num_match, unsigned num_instance) {
-    std::list<unsigned>::iterator begin = num_copy.begin();
+    auto begin = num_copy.begin();
     for (unsigned i = 0; i < num_match; ++i) {
         if (begin != num_copy.end()) {
             // in list

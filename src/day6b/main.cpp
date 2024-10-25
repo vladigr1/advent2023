@@ -25,7 +25,9 @@ void solver() {
 
     uint64_t total = 1;
     while ( !time_file.eof()) {
-        uint64_t time, distance, sol;
+        uint64_t time {0};
+        uint64_t distance {0};
+        uint64_t sol {0};
         time_file >> time;
         distnace_file >> distance;
         spdlog::debug("time={}\n", time);

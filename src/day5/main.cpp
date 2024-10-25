@@ -21,7 +21,7 @@ void solver() {
     while (! seed_file.eof()) {
         
         std::string destination_category {"seed"};
-        unsigned destination_value;
+        unsigned destination_value {0};
         seed_file >> destination_value;
         spdlog::debug("solver: seed:{}", destination_value);
 

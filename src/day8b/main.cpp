@@ -9,12 +9,14 @@
 #include <set>
 #include <unordered_map>
 
+// NOLINTNEXTLINE(bugprone-exception-escape)
 struct Node
 {
-    std::string current;
+    std::string current; // cppcheck-suppress unusedStructMember
     std::string left;
     std::string right;
 };
+
 
 void solver() {
     const std::string file_path = __FILE__;
@@ -27,7 +29,10 @@ void solver() {
     std::unordered_map<std::string, Node> navigateNode;
     std::vector<std::string> currentVector;
     while (!input.eof()) {
-        std::string ignore, current, left, right;
+        std::string ignore;
+        std::string current;
+        std::string left;
+        std::string right;
         input >> current >> ignore >> left >> right;
         // current=AAA ignore== left=(BBB, right=CCC)
         if (current[2] == 'A') { currentVector.push_back(current); }
@@ -44,10 +49,10 @@ void solver() {
         std::string currentSlow = current;
         std::string currentFast = current;
         while (true) {
-            auto doStep = [&navigateNode, &navigateCommand](std::string current, unsigned step) {
+            auto doStep = [&navigateNode, &navigateCommand](std::string current_, unsigned step_) {
                 std::string taget;
-                Node node = navigateNode.at(current);
-                unsigned stepCommand = step % navigateCommand.size();
+                Node node = navigateNode.at(current_);
+                unsigned stepCommand = step_ % static_cast<unsigned>(navigateCommand.size());
                 if (navigateCommand[stepCommand] == 'L') {
                     taget = node.left;
                 } else if (navigateCommand[stepCommand] == 'R') {
@@ -55,7 +60,7 @@ void solver() {
                 } else {
                     spdlog::warn("Illegal command in navigateCommand[stepCommand]={}", navigateCommand[stepCommand]);
                 }
-                spdlog::debug("step={} current={} target={}", step, current, taget);
+                spdlog::debug("step={} current={} target={}", step_, current_, taget);
                 return taget;
             };
 
@@ -65,7 +70,7 @@ void solver() {
             spdlog::debug("step={} currentSlow={}", step, currentSlow);
             ++step;
 
-            if (currentSlow == currentFast && ((step % navigateCommand.size()) == 0)) { break; }
+            if (currentSlow == currentFast && ((step % static_cast<unsigned>(navigateCommand.size())) == 0)) { break; }
         }
         fmt::print("circle size={} start current={} end_location ={}\n",
           step,

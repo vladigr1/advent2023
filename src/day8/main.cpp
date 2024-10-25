@@ -8,9 +8,10 @@
 #include <ranges>
 #include <unordered_map>
 
+ // NOLINTNEXTLINE(bugprone-exception-escape)
 struct Node
 {
-    std::string current;
+    std::string current; // cppcheck-suppress unusedStructMember
     std::string left;
     std::string right;
 };
@@ -25,7 +26,10 @@ void solver() {
     spdlog::debug("navigateCommand={}", navigateCommand);
     std::unordered_map<std::string, Node> navigateNode;
     while (!input.eof()) {
-        std::string ignore, current, left, right;
+        std::string ignore;
+        std::string current;
+        std::string left;
+        std::string right;
         input >> current >> ignore >> left >> right;
         // current=AAA ignore== left=(BBB, right=CCC)
 
@@ -39,7 +43,7 @@ void solver() {
     while(current != "ZZZ"){
         spdlog::debug("current={}", current);
         Node node = navigateNode.at(current);
-        unsigned stepCommand = step % navigateCommand.size();
+        unsigned stepCommand = step % static_cast<unsigned>(navigateCommand.size());
         if(navigateCommand[stepCommand] == 'L'){
             current = node.left;
         }else if(navigateCommand[stepCommand] == 'R'){

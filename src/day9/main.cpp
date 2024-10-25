@@ -8,22 +8,25 @@
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/spdlog.h>
 
+#include <algorithm>
 #include <numeric>
 #include <ranges>
+#include <sstream>
 
 #include <map>
 
 struct Serie
 {
   public:
-    using Map = std::map<std::pair<int, int>, long long int>;
+    using Map = std::map<std::pair<int, int>, double>;
     Map serie;
     int num_column;
     int zero_row;
 
   private:
+    // NOLINTNEXTLINE(misc-no-recursion)
     Map::value_type::second_type calc_value(int row, int column) {
-        long long int value;
+        double value{ 0.0 };
         auto iter = serie.find({ row, column });
         if (iter != serie.end()) {
             value = iter->second;
@@ -35,22 +38,31 @@ struct Serie
         return value;
     }
 
-    bool validate_all_zero_row(int row) {
+    void calc_row(int row) {
+        spdlog::debug("calc_row({})", row);
+        int end = num_column - row;
+        if (end < 1) { return; }
+        for (int column = 0; column < end; ++column) { calc_value(row, column); }
+    }
+
+    [[nodiscard]] bool validate_all_zero_row(int row) const {
         spdlog::debug("validate_all_zero_row({})", row);
-        int end = static_cast<int>(num_column - row);
-        if (end < 1) { return true; }
-        for (const int column : std::views::iota(0, end)) {
-            if (calc_value(row, column) != 0) { return false; }
+        if (num_column <= row) { return true; }
+        int end = num_column - row;
+
+        // NOLINTNEXTLINE(readability-use-anyofallof)
+        for (int column = 0; column < end; ++column) {
+            if (serie.at(std::pair{ row, column }) != 0) { return false; }
         }
         return true;
     }
 
   public:
-    Serie(std::string &line) {
+    explicit Serie(std::string &line) {
         std::istringstream iss(line);
         int column{ 0 };
         while (!iss.eof()) {
-            int value;
+            int value{ 0 };
             iss >> value;
             serie.emplace(std::pair{ 0, column }, value);
             ++column;
@@ -59,7 +71,8 @@ struct Serie
         spdlog::debug("serie={}\n", serie);
         spdlog::debug("num_column={}\n", num_column);
 
-        for (const int row : std::views::iota(1, num_column)) {
+        for (int row = 1; row < num_column; ++row) {
+            calc_row(row);
             if (validate_all_zero_row(row)) {
                 zero_row = row;
                 return;
@@ -68,21 +81,33 @@ struct Serie
         spdlog::debug("zero_row={}", zero_row);
     }
 
-    long long int get_next_value() {
-        long long int value = 0;
-        for (const int row : std::views::iota(0, zero_row)) {
-            long long int factor = serie.at({ row, 0 });
-            long long int multiplier = 1;
-            long long int divder = 1;
-            for (int i : std::views::iota(1, row+1)) {
-                multiplier *= (num_column - i + 1);
-                divder *= i;
+    double get_next_value() {
+        double value = 0;
+        for (int row = 0; row < zero_row; ++row) {
+            double factor = serie.at({ row, 0 });
+            double multiplier = 1.0;
+            for (int i = 1; i < row + 1; ++i) {
+                // cppcheck-suppress useStlAlgorithm
+                multiplier *= static_cast<double>(this->num_column - i + 1) / i;
             }
-            spdlog::debug("row={} factor={} multiplier={} divder={}\n", row, factor, multiplier, divder);
-            value += factor * multiplier / divder;
-            if(multiplier % divder != 0){
-                spdlog::error("bug must divide evenly");
+            spdlog::debug("row={} factor={} multiplier={}\n", row, factor, multiplier);
+            value += factor * multiplier;
+        }
+        spdlog::debug("get_next_value={}", value);
+        return value;
+    }
+
+    double get_prev_value() {
+        double value = 0;
+        for (int row = 0; row < zero_row; ++row) {
+            double factor = serie.at({ row, 0 });
+            double multiplier = 1.0;
+            for (int i = 1; i < row + 1; ++i) {
+                // cppcheck-suppress useStlAlgorithm
+                multiplier *= static_cast<double>(-1 - i + 1) / i;
             }
+            spdlog::debug("row={} factor={} multiplier={}\n", row, factor, multiplier);
+            value += factor * multiplier;
         }
         spdlog::debug("get_next_value={}", value);
         return value;
@@ -95,19 +120,18 @@ void solver() {
     std::ifstream input{ dir_path + "\\input.txt" };
 
     std::string line;
-    long long int sum = 0;
+    double sum = 0;
     while (std::getline(input, line)) {
 
         Serie serie(line);
-        sum += static_cast<double>(serie.get_next_value());
-        
+        sum += serie.get_prev_value();
     }
     fmt::print("Total sum = {}\n", sum);
 }
 
 int main() {
     using namespace std::chrono;
-    spdlog::set_level(spdlog::level::debug);// Set global log level to debug
+    // spdlog::set_level(spdlog::level::debug);// Set global log level to debug
     // auto logger = spdlog::basic_logger_mt("basic_logger", "logs/basic-log.txt");
     // spdlog::set_default_logger(logger);
     // spdlog::set_pattern("[%H:%M:%S %z] [%n] [%^---%L---%$] [thread %t] %v");
