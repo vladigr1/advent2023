@@ -30,4 +30,4 @@ MapFirstRange mapLocationStartToRangeSeed(const MapCategory& mCategory, const Ma
 
 MapFirstRange vectorSeed(std::ifstream &input_file);
 MapFirstRange mergeVectorSeed(MapFirstRange &vectorSeed);
-MapFirstRange genVectorSeedFromMapDestination(MapFirstRange &vseed, MapFirstRange& curMapdist);
+MapFirstRange genVectorSeedFromMapDestination(const MapFirstRange &vseed, const MapFirstRange& curMapdist);

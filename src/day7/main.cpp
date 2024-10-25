@@ -5,7 +5,9 @@
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/spdlog.h>
 
+// cppcheck-suppress-begin cppcheck-suppress [functionStatic, noExplicitConstructor, shadowFunction]
 #include <magic_enum.hpp>
+// cppcheck-suppress-end cppcheck-suppress [functionStatic, noExplicitConstructor, shadowFunction]
 
 #include <string>
 
@@ -17,12 +19,14 @@
 
 enum class Type { HighCard, OnePair, TwoPair, ThreeOfKind, FullHouse, FourOfKind, FiveOfKind };
 
+// NOLINTNEXTLINE(bugprone-exception-escape)
 class Player
 {
   public:
+
     unsigned bid;
     std::string hand;
-    Player(std::string hand_, unsigned bid_) : bid(bid_), hand(hand_) {
+    Player(std::string &hand_, unsigned bid_) : bid(bid_), hand(hand_) {
         std::map<unsigned, unsigned> countCard;
 
         handValue = 0;
@@ -54,25 +58,25 @@ class Player
 
         auto toType = [&maxCount]() {
             switch (maxCount[0]) {
-            case 5:
+            case 5: // NOLINT(bugprone-exception-escape,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
                 return Type::FiveOfKind;
-            case 4:
+            case 4: // NOLINT(bugprone-exception-escape,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
                 return Type::FourOfKind;
-            case 3:
+            case 3: // NOLINT(bugprone-exception-escape,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
                 switch (maxCount[1]) {
-                case 2:
+                case 2: // NOLINT(bugprone-exception-escape,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
                     return Type::FullHouse;
                 default:
                     return Type::ThreeOfKind;
                 }
-            case 2:
+            case 2: // NOLINT(bugprone-exception-escape,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
                 switch (maxCount[1]) {
-                case 2:
+                case 2: // NOLINT(bugprone-exception-escape,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
                     return Type::TwoPair;
                 default:
                     return Type::OnePair;
                 }
-            case 1:
+            case 1: // NOLINT(bugprone-exception-escape,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
                 return Type::HighCard;
             default:
                 spdlog::debug("fail to find type");
@@ -83,7 +87,7 @@ class Player
         type = toType();
     }
 
-    bool operator<(const Player other) {
+    bool operator<(const Player &other) const {
         if (type < other.type) { return true; }
 
         if (type == other.type) { return handValue < other.handValue; }
@@ -96,18 +100,18 @@ class Player
     unsigned handValue;
 
     static constexpr unsigned NUM_CARD_VALUE{ 16 };
-    unsigned cardValue(char card) {
+    static unsigned cardValue(char card) {
         switch (card) {
         case 'T':
-            return 10;
+            return 10; // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
         case 'J':
-            return 11;
+            return 11; // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
         case 'Q':
-            return 12;
+            return 12; // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
         case 'K':
-            return 13;
+            return 13; // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
         case 'A':
-            return 14;
+            return 14; // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
         default:
             return static_cast<unsigned>(card - '0');
         }
@@ -122,7 +126,7 @@ void solver() {
     std::vector<Player> player;
     while (!input.eof()) {
         std::string hand;
-        unsigned bid;
+        unsigned bid {0};
         input >> hand >> bid;
         player.emplace_back(hand, bid);
     }

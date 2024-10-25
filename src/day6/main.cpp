@@ -1,15 +1,15 @@
-#include <fstream>
 #include <chrono>
+#include <fstream>
 #include <limits>
 
 #include <fmt/format.h>
-#include <spdlog/spdlog.h>
 #include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/spdlog.h>
 
-unsigned solution(unsigned time, unsigned distance){
+unsigned solution(unsigned time, unsigned distance) {
     unsigned solution = 0;
-    for (unsigned speedup=0; speedup<=time; ++speedup){
-        if (speedup*(time-speedup) >  distance) ++solution;
+    for (unsigned speedup = 0; speedup <= time; ++speedup) {
+        if (speedup * (time - speedup) > distance) { ++solution; }
     }
     return solution;
 }
@@ -21,17 +21,17 @@ void solver() {
     std::ifstream distnace_file{ dir_path + "\\distance.txt" };
 
     unsigned total = 1;
-    while ( !time_file.eof()) {
-        unsigned time, distance, sol;
+    while (!time_file.eof()) {
+        unsigned time{ 0 };
+        unsigned distance{ 0 };
+        unsigned sol{ 0 };
         time_file >> time;
         distnace_file >> distance;
         spdlog::debug("time={}\n", time);
         spdlog::debug("distance={}\n", distance);
         sol = solution(time, distance);
         spdlog::debug("sol={}\n", sol);
-        if (sol != 0){
-            total *= sol;
-        }
+        if (sol != 0) { total *= sol; }
     }
     fmt::print("total solutions: {}\n", total);
 }

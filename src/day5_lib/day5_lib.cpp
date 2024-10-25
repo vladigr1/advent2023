@@ -21,8 +21,10 @@ MapFirstRange getMapFirstRange(std::ifstream &input_file){
     while (std::getline(input_file, myline)) {
         std::stringstream extract {myline};
         // if (extract.view().empty()) break; // not support in clang
-        if (extract.str().empty()) break;
-        unsigned start_source, start_destination, length;
+        if (extract.str().empty()) {break;}
+        unsigned start_source{0};
+        unsigned start_destination{0};
+        unsigned length{0};
         extract >> start_destination >> start_source >> length;
 // spdlog::debug::debug("getMapFirstRange: myline: {}", myline);
         res[start_source] = {start_destination, length};
@@ -32,8 +34,8 @@ MapFirstRange getMapFirstRange(std::ifstream &input_file){
 }
 
 unsigned getDestintion(MapFirstRange &mapFirstRange, unsigned source){
-    MapFirstRange::iterator res = --mapFirstRange.upper_bound(source);
-    if (res == mapFirstRange.end()) return source;
+    auto res = --mapFirstRange.upper_bound(source);
+    if (res == mapFirstRange.end()) {return source;}
     unsigned delta = source - res->first;
     if(delta >= res->second.length){
 // spdlog::debug::debug("getDestintion: not in range - {}", source);
@@ -43,9 +45,9 @@ unsigned getDestintion(MapFirstRange &mapFirstRange, unsigned source){
 }
 
 FirstRange getDestintionAndLenghExtra(const MapFirstRange &mapFirstRange, unsigned source){
-    MapFirstRange::const_iterator res = --mapFirstRange.upper_bound(source);
+    const auto res = --mapFirstRange.upper_bound(source);
     // not locate before
-    if (res == mapFirstRange.cend()) return {source, mapFirstRange.begin()->first - source};
+    if (res == mapFirstRange.cend()) {return {source, mapFirstRange.begin()->first - source};}
     unsigned delta = source - res->first;
     if(delta >= res->second.length){
 // spdlog::debug::debug("getDestintion: not in range - {}", source);
@@ -79,7 +81,7 @@ MapFirstRange mapLocationStartToRangeSeed(const MapCategory& mCategory, const Ma
         for ( MapFirstRange::value_type &val : mSeedToLocation){
             unsigned seedFirst {val.first};
             FirstRange seedDestinationFirstRange {val.second};
-            while (seedDestinationFirstRange.length){
+            while (seedDestinationFirstRange.length != 0U){
                 // search in next destination from last destination
                 auto [destinationCur, lengthExtra] = getDestintionAndLenghExtra(mDestination.at(destination_category), seedDestinationFirstRange.start_destination);
                 lengthExtra = std::min(lengthExtra, seedDestinationFirstRange.length);
@@ -101,7 +103,8 @@ MapFirstRange mapLocationStartToRangeSeed(const MapCategory& mCategory, const Ma
 MapFirstRange vectorSeed(std::ifstream &input_file){
     MapFirstRange res;
     while (! input_file.eof()) {
-        unsigned seed_start, range;
+        unsigned seed_start{0};
+        unsigned range{0};
         input_file >> seed_start >> range;
 // spdlog::debug::debug("solver: seed_start={} range={}", seed_start, range);
         res[seed_start] = {seed_start, range};
@@ -113,7 +116,7 @@ MapFirstRange vectorSeed(std::ifstream &input_file){
 MapFirstRange mergeVectorSeed(MapFirstRange &vectorSeed){
     MapFirstRange res;
     FirstRange entry = vectorSeed.begin()->second;
-    for(MapFirstRange::iterator iter = ++vectorSeed.begin(); iter != vectorSeed.end(); ++iter){
+    for(auto iter = ++vectorSeed.begin(); iter != vectorSeed.end(); ++iter){
         if (entry.start_destination + entry.length >= iter->first){
             entry.length += iter->second.length + entry.start_destination + entry.length - iter->first;
         }else{
@@ -126,12 +129,12 @@ MapFirstRange mergeVectorSeed(MapFirstRange &vectorSeed){
 }
 
 
-MapFirstRange genVectorSeedFromMapDestination(MapFirstRange &vseed, MapFirstRange& curMapdist){
+MapFirstRange genVectorSeedFromMapDestination(const MapFirstRange &vseed, const MapFirstRange& curMapdist){
     MapFirstRange vdestination; 
     for (auto value : vseed){
         FirstRange curSeedRange = value.second;
 // spdlog::debug::debug("new curSeedRange.start_destination={} curSeedRange.length={}\n", curSeedRange.start_destination, curSeedRange.length);
-        while(curSeedRange.length){
+        while(curSeedRange.length != 0U){
 // spdlog::debug::debug("curSeedRange.start_destination={} curSeedRange.length={}\n", curSeedRange.start_destination, curSeedRange.length);
             FirstRange entry = getDestintionAndLenghExtra(curMapdist, curSeedRange.start_destination);
 // spdlog::debug::debug("entry.start_destination={} entry.length={}\n", entry.start_destination, entry.length);
